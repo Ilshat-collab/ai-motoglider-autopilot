@@ -26,3 +26,14 @@
 ```bash
 pip install mujoco numpy
 pip install torch onnx        # для обучения, оценки сети и экспорта
+
+## Порядок работы
+
+```bash
+python check_model.py                                   # проверка модели, код возврата 0
+python ai_eval.py --baseline --only tz20                # испытание базового навигатора с модулем
+python ai_bc.py --out ai_pilot_bc.pth                   # обучение подражанием
+python ai_train.py --updates 200 --em-bonus 0.05        # PPO, веса в ai_pilot.pth
+python ai_eval.py --model ai_pilot.pth --log protocol   # испытания сети, протокол и траектории
+python ai_pilot.py --weights ai_pilot.pth --onnx ai_pilot.onnx   # модель .onnx, размер, время инференса
+

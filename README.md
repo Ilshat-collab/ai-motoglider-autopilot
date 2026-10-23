@@ -28,6 +28,7 @@ pip install mujoco numpy
 pip install torch onnx        # для обучения, оценки сети и экспорта
 
 ---
+```
 
 ## Порядок работы
 

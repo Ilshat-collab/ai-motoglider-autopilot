@@ -1,0 +1,151 @@
+<mujoco model="motoglider">
+  <!-- Готовая модель мотопланера ООО «НейроСкай Дайнамикс». MuJoCo не считает подъемную силу:
+       аэродинамика, тяга, ветер и движение препятствий задаются из motoglider.py по данным раздела custom. -->
+  <compiler angle="radian" autolimits="true"/>
+  <option timestep="0.01" integrator="implicitfast" gravity="0 0 -9.81" density="0" viscosity="0"/>
+  <visual>
+    <global offwidth="1280" offheight="800" fovy="45"/>
+    <map znear="0.0005" zfar="3"/>
+    <headlight ambient="0.35 0.35 0.35" diffuse="0.5 0.5 0.5" specular="0.1 0.1 0.1"/>
+  </visual>
+  <statistic extent="1000" center="800 0 100"/>
+  <custom>
+    <numeric name="glider_geom" data="0.792 3.95 0.2 19.7001"/>
+    <numeric name="aero_lift" data="0.35 5.4 40 0.245843 1.75 0.19"/>
+    <numeric name="aero_drag" data="0.025 0.466987"/>
+    <numeric name="aero_side" data="-0.3 -0.11"/>
+    <numeric name="aero_roll" data="-0.07 -0.7 -0.14 -0.22 -0.006"/>
+    <numeric name="aero_yaw" data="-0.05 0.07 -0.04 -0.022 -0.03"/>
+    <numeric name="aero_pitch" data="0.025 -0.55 -8 -0.9"/>
+    <numeric name="atmos" data="1.225"/>
+    <numeric name="prop" data="0.0804248 0.480482 26 0.5 0.08 0.15 0.4 0.62"/>
+    <numeric name="battery" data="181152 25"/>
+    <numeric name="limits" data="28 4 1.3 1.5"/>
+    <numeric name="pid_roll" data="0.7 0.15 0.08"/>
+    <numeric name="pid_pitch" data="1 0.15 3.5 0.8 40 8 8 -25 20"/>
+    <numeric name="pid_yaw" data="2.5 0.8 0.5 -0.733333 2.33333"/>
+    <numeric name="pid_sched" data="11 0.4 2 500 50"/>
+    <numeric name="surf_limits" data="20 15 25"/>
+    <numeric name="setpoint_limits" data="45 10 9.5 20"/>
+    <numeric name="stereo" data="933.333 1.29822 0.3 0.5 400 0.05 0.05 0.2"/>
+    <numeric name="wind_sensor" data="0.45 -1.05 0.1"/>
+    <numeric name="move_mov_aerostat_1" data="1 25 15 5 40 0 0 0 0"/>
+    <numeric name="move_mov_aerostat_2" data="1 30 20 6 55 1.5 0 0 0"/>
+    <numeric name="move_mov_balloon_1" data="2 0 0 4 30 0 0 -3 0"/>
+    <numeric name="move_mov_airship_1" data="3 0 120 0 80 0 0 0 0"/>
+  </custom>
+  <default>
+    <default class="aircraft"><geom contype="1" conaffinity="0" group="0" material="airframe"/></default>
+    <default class="visual"><geom contype="0" conaffinity="0" group="0"/></default>
+    <default class="obstacle"><geom contype="0" conaffinity="1" group="0" material="obstacle"/></default>
+    <default class="marker"><geom contype="0" conaffinity="0" group="2"/></default>
+  </default>
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.52 0.68 0.88" rgb2="0.92 0.95 1.0" width="512" height="3072"/>
+    <texture name="grid" type="2d" builtin="checker" rgb1="0.30 0.42 0.24" rgb2="0.34 0.47 0.27" width="512" height="512" mark="random" random="0.08" markrgb="0.25 0.33 0.2"/>
+    <material name="ground" texture="grid" texrepeat="0.02 0.02" texuniform="true"/>
+    <material name="obstacle" rgba="0.45 0.46 0.5 1"/>
+    <material name="balloon" rgba="0.80 0.40 0.16 1"/>
+    <material name="moving" rgba="0.95 0.62 0.10 1"/>
+    <material name="airship" rgba="0.82 0.84 0.88 1"/>
+    <material name="tree" rgba="0.18 0.35 0.16 1"/>
+    <material name="airframe" rgba="0.95 0.95 0.95 1" specular="0.3"/>
+    <material name="surface" rgba="0.80 0.82 0.86 1"/>
+    <material name="dark" rgba="0.15 0.15 0.18 1"/>
+    <material name="sudden" rgba="0.85 0.12 0.12 1"/>
+  </asset>
+  <worldbody>
+    <light name="sun" directional="true" pos="0 0 1000" dir="0.3 0.25 -1" diffuse="0.75 0.75 0.72" castshadow="false"/>
+    <geom name="ground" class="obstacle" type="plane" size="0 0 10" material="ground"/>
+    <body name="obs_tower_1_b" mocap="true" pos="350 25 45">
+      <geom name="obs_tower_1" class="obstacle" type="cylinder" size="4 45"/>
+    </body>
+    <body name="obs_tower_2_b" mocap="true" pos="700 -70 60">
+      <geom name="obs_tower_2" class="obstacle" type="cylinder" size="6 60"/>
+    </body>
+    <body name="obs_tower_3_b" mocap="true" pos="1250 60 55">
+      <geom name="obs_tower_3" class="obstacle" type="cylinder" size="5 55"/>
+    </body>
+    <body name="obs_building_b" mocap="true" pos="520 110 25">
+      <geom name="obs_building" class="obstacle" type="box" size="30 20 25"/>
+    </body>
+    <body name="obs_tree_b" mocap="true" pos="800 -150 12">
+      <geom name="obs_tree" class="obstacle" type="ellipsoid" size="8 8 12" material="tree"/>
+    </body>
+    <body name="obs_aerostat_static_b" mocap="true" pos="1000 -15 115">
+      <geom name="obs_aerostat_static" class="obstacle" type="sphere" size="12" material="balloon"/>
+    </body>
+    <body name="mov_aerostat_1" mocap="true" pos="450 -40 100">
+      <geom name="mov_aerostat_1_g" class="obstacle" type="sphere" size="10" material="moving"/>
+    </body>
+    <body name="mov_aerostat_2" mocap="true" pos="1100 50 130">
+      <geom name="mov_aerostat_2_g" class="obstacle" type="sphere" size="10" material="moving"/>
+    </body>
+    <body name="mov_balloon_1" mocap="true" pos="800 250 110">
+      <geom name="mov_balloon_1_g" class="obstacle" type="sphere" size="8" material="moving"/>
+    </body>
+    <body name="mov_airship_1" mocap="true" pos="1450 0 100">
+      <geom name="mov_airship_1_g" class="obstacle" type="ellipsoid" size="15 5 5" material="airship"/>
+    </body>
+    <body name="sudden_obstacle" mocap="true" pos="0 0 -2000">
+      <geom name="sudden_obstacle_g" class="obstacle" type="sphere" size="6" material="sudden"/>
+    </body>
+    <body name="goal" mocap="true" pos="1600 0 110">
+      <geom name="goal_sphere" class="marker" type="sphere" size="30" rgba="1 0.15 0.15 0.18"/>
+      <geom name="goal_core" class="marker" type="sphere" size="3" rgba="1 0.15 0.15 0.9"/>
+      <geom name="goal_pole" class="marker" type="cylinder" size="0.8 55" pos="0 0 -55" rgba="1 0.2 0.2 0.5"/>
+    </body>
+    <body name="glider" pos="0 0 130">
+      <freejoint name="root"/>
+      <inertial pos="0 0 0" mass="3.9250" diaginertia="1.45 0.45 1.85"/>
+      <site name="imu" pos="0 0 0" size="0.01"/>
+      <geom name="fus_pod" class="aircraft" type="capsule" fromto="0.55 0 0 -0.3 0 0" size="0.05"/>
+      <geom name="fus_boom" class="aircraft" type="capsule" fromto="-0.3 0 0 -1.03 0 0" size="0.02"/>
+      <geom name="canopy" class="visual" type="ellipsoid" size="0.16 0.04 0.035" pos="0.25 0 0.035" rgba="0.2 0.3 0.45 0.8"/>
+      <geom name="wing_l" class="aircraft" type="box" size="0.075 0.9875 0.006" pos="-0.005 0.986147 0.107682" euler="0.0523599 0 0"/>
+      <geom name="te_l" class="visual" type="box" size="0.025 0.562875 0.004" pos="-0.105 0.621272 0.0885595" euler="0.0523599 0 0" material="surface"/>
+      <geom name="cam_pod_l" class="aircraft" type="box" size="0.025 0.015 0.015" pos="0.09 0.649109 0.111018" material="dark"/>
+      <geom name="wing_r" class="aircraft" type="box" size="0.075 0.9875 0.006" pos="-0.005 -0.986147 0.107682" euler="-0.0523599 0 0"/>
+      <geom name="te_r" class="visual" type="box" size="0.025 0.562875 0.004" pos="-0.105 -0.621272 0.0885595" euler="-0.0523599 0 0" material="surface"/>
+      <geom name="cam_pod_r" class="aircraft" type="box" size="0.025 0.015 0.015" pos="0.09 -0.649109 0.111018" material="dark"/>
+      <geom name="sensor_boom" class="aircraft" type="capsule" fromto="0.05 -1.05 0.1 0.43 -1.05 0.1" size="0.006" material="dark"/>
+      <site name="wind_sensor" pos="0.45 -1.05 0.1" size="0.02" rgba="1 0.8 0 1"/>
+      <geom name="prop_disk" class="visual" type="cylinder" size="0.16 0.003" pos="0.62 0 0" euler="0 1.5708 0" rgba="0.1 0.1 0.1 0"/>
+      <geom name="spinner" class="visual" type="sphere" size="0.03" pos="0.61 0 0" material="dark"/>
+      <camera name="cam_left" pos="0.116 0.649109 0.111018" xyaxes="0 -1 0 0.0871557 0 0.996195" resolution="1280 800" sensorsize="0.00384 0.0024" focal="0.0028 0.0028"/>
+      <camera name="cam_right" pos="0.116 -0.649109 0.111018" xyaxes="0 -1 0 0.0871557 0 0.996195" resolution="1280 800" sensorsize="0.00384 0.0024" focal="0.0028 0.0028"/>
+      <body name="ail_l" pos="-0.08 1.56797 0.138174" euler="0.0523599 0 0">
+        <joint name="ail_l" type="hinge" axis="0 1 0" range="-0.349066 0.349066" armature="0.005" damping="0.001"/>
+        <inertial pos="-0.025 0 0" mass="0.02" diaginertia="0.000988915 4.27333e-06 0.000992975"/>
+        <geom class="visual" type="box" size="0.025 0.385125 0.004" pos="-0.025 0 0" material="surface"/>
+      </body>
+      <body name="ail_r" pos="-0.08 -1.56797 0.138174" euler="-0.0523599 0 0">
+        <joint name="ail_r" type="hinge" axis="0 1 0" range="-0.349066 0.349066" armature="0.005" damping="0.001"/>
+        <inertial pos="-0.025 0 0" mass="0.02" diaginertia="0.000988915 4.27333e-06 0.000992975"/>
+        <geom class="visual" type="box" size="0.025 0.385125 0.004" pos="-0.025 0 0" material="surface"/>
+      </body>
+      <geom name="htail" class="aircraft" type="box" size="0.0362903 0.31 0.004" pos="-0.956048 0 0.03"/>
+      <body name="elevator" pos="-0.992339 0 0.03">
+        <joint name="elevator" type="hinge" axis="0 1 0" range="-0.261799 0.261799" armature="0.005" damping="0.001"/>
+        <inertial pos="-0.0241935 0 0" mass="0.02" diaginertia="0.000640727 3.96219e-06 0.000644569"/>
+        <geom class="visual" type="box" size="0.0241935 0.31 0.003" pos="-0.0241935 0 0" material="surface"/>
+      </body>
+      <geom name="vtail" class="aircraft" type="box" size="0.06 0.004 0.165" pos="-0.96 0 0.185"/>
+      <body name="rudder" pos="-1.02 0 0.185">
+        <joint name="rudder" type="hinge" axis="0 0 1" range="-0.436332 0.436332" armature="0.005" damping="0.001"/>
+        <inertial pos="-0.04 0 0" mass="0.015" diaginertia="0.00013617 0.000144125 8.045e-06"/>
+        <geom class="visual" type="box" size="0.04 0.003 0.165" pos="-0.04 0 0" material="surface"/>
+      </body>
+    </body>
+  </worldbody>
+  <actuator>
+    <position name="ail_l" joint="ail_l" kp="6" kv="0.35" ctrlrange="-0.349066 0.349066" forcerange="-0.5 0.5"/>
+    <position name="ail_r" joint="ail_r" kp="6" kv="0.35" ctrlrange="-0.349066 0.349066" forcerange="-0.5 0.5"/>
+    <position name="elevator" joint="elevator" kp="6" kv="0.35" ctrlrange="-0.261799 0.261799" forcerange="-0.5 0.5"/>
+    <position name="rudder" joint="rudder" kp="6" kv="0.35" ctrlrange="-0.436332 0.436332" forcerange="-0.5 0.5"/>
+  </actuator>
+  <sensor>
+    <accelerometer name="imu_acc" site="imu"/>
+    <gyro name="imu_gyro" site="imu"/>
+  </sensor>
+</mujoco>
